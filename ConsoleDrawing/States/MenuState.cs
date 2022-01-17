@@ -20,12 +20,13 @@ public class MenuState : State
 
         try
         {
-            ConsoleHandler(Convert.ToInt32(Console.ReadLine(),CultureInfo.CurrentCulture));
+            ConsoleHandler(ConvertConsoleInputToInt());
         }
         catch (FormatException)
         {
-            Console.Clear();
-            ShowMenu();
+            Console.WriteLine("ERROR::Wrong format!!");
+            Console.WriteLine("Press enter...");
+            Console.ReadLine();
         }
     }
 
