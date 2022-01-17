@@ -23,7 +23,7 @@ public class SettingsState : State
         Console.WriteLine("0-------------Exit--------------");
         try
         {
-            ConsoleHandler(Convert.ToInt32(Console.ReadLine(), CultureInfo.CurrentCulture));
+            ConsoleHandler(ConvertConsoleInputToInt());
         }
         catch (FormatException)
         {
@@ -48,6 +48,8 @@ public class SettingsState : State
                     {
                         Console.WriteLine("ERROR::The new console window size would force the console buffer " +
                                           "size to be too large.");
+                        Console.WriteLine("Press enter...");
+                        Console.ReadLine();
                     }
                     catch (FormatException)
                     {

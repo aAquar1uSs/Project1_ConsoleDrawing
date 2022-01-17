@@ -1,4 +1,6 @@
-﻿namespace ConsoleDrawing.States;
+﻿using System.Globalization;
+
+namespace ConsoleDrawing.States;
 
 public abstract class State
 {
@@ -12,6 +14,11 @@ public abstract class State
     protected abstract void ShowMenu();
     protected abstract void ConsoleHandler(int selection);
 
+    public int ConvertConsoleInputToInt()
+    {
+        return Convert.ToInt32(Console.ReadLine(), CultureInfo.CurrentCulture);
+    }
+    
     protected void DeleteState()
     {
         States.Pop();
