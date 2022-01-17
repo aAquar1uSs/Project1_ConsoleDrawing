@@ -26,4 +26,14 @@ public class Line : Shape
         CoordX1Y1.Movement(dirMove);
         CoordX2Y2.Movement(dirMove);
     }
+
+    public override void Update()
+    {
+        
+    }
+
+    public override void Render()
+    {
+        throw new NotImplementedException();
+    }
 }
