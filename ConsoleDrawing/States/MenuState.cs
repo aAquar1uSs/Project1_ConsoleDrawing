@@ -18,7 +18,15 @@ public class MenuState : State
         Console.WriteLine("2-------Settings-------");
         Console.WriteLine("0---------Exit---------");
 
-        ConsoleHandler(Convert.ToInt32(Console.ReadLine(),CultureInfo.CurrentCulture));
+        try
+        {
+            ConsoleHandler(Convert.ToInt32(Console.ReadLine(),CultureInfo.CurrentCulture));
+        }
+        catch (FormatException)
+        {
+            Console.Clear();
+            ShowMenu();
+        }
     }
 
     protected override void ConsoleHandler(int selection)

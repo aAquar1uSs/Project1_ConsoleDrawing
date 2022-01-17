@@ -21,8 +21,15 @@ public class SettingsState : State
         Console.WriteLine("2------Select File to Save------");
         Console.WriteLine("3--------Show all settings------");
         Console.WriteLine("0-------------Exit--------------");
-        
-        ConsoleHandler(Convert.ToInt32(Console.ReadLine(), CultureInfo.CurrentCulture));
+        try
+        {
+            ConsoleHandler(Convert.ToInt32(Console.ReadLine(), CultureInfo.CurrentCulture));
+        }
+        catch (FormatException)
+        {
+            Console.Clear();
+            ShowMenu();
+        }
     }
 
     protected override void ConsoleHandler(int selection)
@@ -45,6 +52,8 @@ public class SettingsState : State
                     catch (FormatException)
                     {
                         Console.WriteLine("ERROR::Wrong format!!");
+                        Console.WriteLine("Press enter...");
+                        Console.ReadLine();
                     }
                 break;
             case 2:
