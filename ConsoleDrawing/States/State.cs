@@ -6,7 +6,7 @@ public abstract class State
 
     protected State(Stack<State> states)
     {
-        this.States = states;
+       States = states;
     }
     
     protected abstract void ShowMenu();
