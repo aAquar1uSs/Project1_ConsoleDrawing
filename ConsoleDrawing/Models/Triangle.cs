@@ -13,10 +13,20 @@ public class Triangle: Shape
     
     public Triangle(string shapeName, bool isFilled) : base(shapeName, isFilled)
     {
+        
     }
-
     
     public override void Move(DirectionMove dirMove)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Update()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Render()
     {
         throw new NotImplementedException();
     }

@@ -13,13 +13,18 @@ public abstract class Shape
     public abstract Point Coordinates { get; }
 
     public bool IsFilled { get; set; }
-
-    public abstract void Move(DirectionMove dirMove);
     
     protected Shape(string shapeName, bool isFilled)
     {
         ShapeName = shapeName;
         this.IsFilled = isFilled;
     }
+    
+    public abstract void Move(DirectionMove dirMove);
+
+    public abstract void Update();
+
+    public abstract void Render();
+
 
 }

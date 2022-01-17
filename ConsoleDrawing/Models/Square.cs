@@ -19,4 +19,14 @@ public class Square : Shape
     {
         throw new NotImplementedException();
     }
+
+    public override void Update()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Render()
+    {
+        throw new NotImplementedException();
+    }
 }
