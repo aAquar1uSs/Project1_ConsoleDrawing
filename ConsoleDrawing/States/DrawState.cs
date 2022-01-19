@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using ConsoleDrawing.DTO;
 using ConsoleDrawing.Enums;
-using ConsoleDrawing.Services;
+using ConsoleDrawing.Factories;
 
 namespace ConsoleDrawing.States;
 
@@ -20,11 +20,11 @@ public class DrawState : State
         Console.WriteLine("Menu:");
         Console.WriteLine("1 - Add new shape");
         Console.WriteLine("2 - Change direction in current shape");
-        Console.WriteLine("3 - Delete figure");
-        Console.WriteLine("4 - Upload");
-        Console.WriteLine("5 - Save");
-        Console.WriteLine("6 - Sort");
-        Console.WriteLine("7 - Change current shape");
+        Console.WriteLine("3 - Change current shape");
+        Console.WriteLine("4 - Delete figure");
+        Console.WriteLine("5 - Upload");
+        Console.WriteLine("6 - Save");
+        Console.WriteLine("7 - Sort");
         Console.WriteLine("8 - Help");
         Console.WriteLine("0 - Exit");
         try
@@ -49,23 +49,23 @@ public class DrawState : State
         switch (selection)
         {
             case 1:
-                InvokeFiguresMenu();
+                InvokeShapesMenu();
                 break;
             case 2:
                 ChangeDirection();
                 break;
             case 3:
-                DeleteShape();
+                TryChangeCurrentShape();
                 break;
             case 4:
-                throw new NotImplementedException();
+                DeleteShape();
+                break;
             case 5:
                 throw new NotImplementedException();
             case 6:
-                InvokeSortOperation();
-                break;
+                throw new NotImplementedException();
             case 7:
-                TryChangeCurrentShape();
+                InvokeSortOperation();
                 break;
             case 8:
                 HelpMenu();
@@ -80,7 +80,7 @@ public class DrawState : State
         }
     }
 
-    private void InvokeFiguresMenu()
+    private void InvokeShapesMenu()
     {
         Console.WriteLine("-------------");
         Console.WriteLine("1 - Add line");
@@ -89,13 +89,22 @@ public class DrawState : State
         Console.WriteLine("4 - Add rectangle");
         Console.WriteLine("5 - Add square");
         
+        AddShapeToPicture();
+
+        Console.Clear();
+    }
+    
+    private void AddShapeToPicture()
+    {
         var shape = ShapeFactory.ResolveShapes(Convert.ToInt32(Console.ReadLine(),
-                CultureInfo.CurrentCulture));
+            CultureInfo.CurrentCulture));
         if (shape is null)
             throw new FormatException(nameof(shape));
-        _drawing.AddShapeToList(shape);
-        
-        Console.Clear();
+        if (!_drawing.AddShapeToList(shape))
+        {
+            ErrorMessage("The shape went beyond the canvas. Please try again!");
+            Console.ReadLine();
+        } 
     }
 
     private static void HelpMenu()
@@ -174,10 +183,9 @@ public class DrawState : State
 
         if (!int.TryParse(Console.ReadLine(), out var mode))
             throw new FormatException();
+        
         if (!_drawing.Sort(mode, square, perimeter))
-        {
-            ErrorMessage("ERROR::Wrong operation!! Press enter...");
-        }
+            ErrorMessage("ERROR::Invalid arguments!! Press enter...");
     }
 
     private void TryChangeCurrentShape()
@@ -187,16 +195,17 @@ public class DrawState : State
         {
             switch (keyInfo.Key)
             {
-               case ConsoleKey.W:
-                   _drawing.SelectUpperShape();
-                   break;
-               case ConsoleKey.S:
+                case ConsoleKey.UpArrow:
+                    _drawing.SelectUpperShape();
+                    break;
+                case ConsoleKey.DownArrow:
                     _drawing.SelectLowerShape();
-                   break;
+                    break;
             }
             keyInfo = Console.ReadKey();
         }
     }
+    
     
     public override void Update()
     {
