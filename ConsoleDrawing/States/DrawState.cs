@@ -1,37 +1,47 @@
 ﻿using System.Globalization;
-using ConsoleDrawing.Models;
+using ConsoleDrawing.DTO;
+using ConsoleDrawing.Enums;
+using ConsoleDrawing.Services;
 
 namespace ConsoleDrawing.States;
 
 public class DrawState : State
 {
-    private List<Shape> _shapes;
-
-    public DrawState(Stack<State> states) : base(states)
+    private readonly DrawingPicture _drawing;
+    public DrawState(Stack<State> states, DtoSettings settings) : base(states)
     {
-        _shapes = new List<Shape>();
+        _drawing = new DrawingPicture(settings.WindowHeight - 10, settings.WindowWidth - 4);
     }
 
     protected override void ShowMenu()
     {
-       Console.Clear();
-       Console.WriteLine("Menu:");
-       Console.WriteLine("1 - Add new figure");
-       Console.WriteLine("2 - Upload");
-       Console.WriteLine("3 - Save");
-       Console.WriteLine("4 - Sort");
-       Console.WriteLine("0 - Exit");
-
-       try
-       {
-            ConsoleHandler(ConvertConsoleInputToInt());
-       }
-       catch (FormatException)
-       {
-           Console.WriteLine("ERROR::Wrong format!!");
-           Console.WriteLine("Press enter...");
-           Console.ReadLine();
-       }
+        Console.Clear(); 
+        _drawing.Print();
+        Console.WriteLine("Menu:");
+        Console.WriteLine("1 - Add new shape");
+        Console.WriteLine("2 - Change direction in current shape");
+        Console.WriteLine("3 - Delete figure");
+        Console.WriteLine("4 - Upload");
+        Console.WriteLine("5 - Save");
+        Console.WriteLine("6 - Sort");
+        Console.WriteLine("7 - Change current shape");
+        Console.WriteLine("8 - Help");
+        Console.WriteLine("0 - Exit");
+        try
+        { 
+            ConsoleHandler(Convert.ToInt32(Console.ReadLine(), CultureInfo.CurrentCulture));
+        }    
+        catch (FormatException)
+        { 
+            ErrorMessage("ERROR::Wrong format!! Press enter...");
+            Console.ReadLine();
+        }
+        catch (OverflowException)
+        {
+            ErrorMessage("Value was either too large or too small! Press enter...");
+            Console.ReadLine();
+        }
+        
     }
 
     protected override void ConsoleHandler(int selection)
@@ -42,33 +52,150 @@ public class DrawState : State
                 InvokeFiguresMenu();
                 break;
             case 2:
-                //Upload();
+                ChangeDirection();
                 break;
             case 3:
-                //Save();
+                DeleteShape();
                 break;
             case 4:
-                //Sort();
-                break;
+                throw new NotImplementedException();
             case 5:
+                throw new NotImplementedException();
+            case 6:
+                InvokeSortOperation();
+                break;
+            case 7:
+                TryChangeCurrentShape();
+                break;
+            case 8:
+                HelpMenu();
+                break;
+            case 0:
                 DeleteState();
                 break;
             default:
-                Console.WriteLine("Wrong input");
+                ErrorMessage("ERROR::Wrong format!! Press enter...");
+                Console.ReadLine();
                 break;
-                
         }
     }
 
-    private static void InvokeFiguresMenu()
+    private void InvokeFiguresMenu()
     {
+        Console.WriteLine("-------------");
+        Console.WriteLine("1 - Add line");
+        Console.WriteLine("2 - Add circle");
+        Console.WriteLine("3 - Add triangle");
+        Console.WriteLine("4 - Add rectangle");
+        Console.WriteLine("5 - Add square");
+        
+        var shape = ShapeFactory.ResolveShapes(Convert.ToInt32(Console.ReadLine(),
+                CultureInfo.CurrentCulture));
+        if (shape is null)
+            throw new FormatException(nameof(shape));
+        _drawing.AddShapeToList(shape);
+        
         Console.Clear();
-        Console.WriteLine("1 - Line");
-        Console.WriteLine("2 - Circle");
-        Console.WriteLine("3 - Triangle");
-        Console.WriteLine("4 - Rectangle");
-        Console.WriteLine("5 - Square");
+    }
+
+    private static void HelpMenu()
+    {
+        Console.WriteLine("========Help=======");
+        Console.WriteLine("ArrowUp - go up");
+        Console.WriteLine("ArrowDown - go down");
+        Console.WriteLine("ArrowLeft - go left");
+        Console.WriteLine("ArrowRight - go right");
+        Console.WriteLine("W - select upper shape");
+        Console.WriteLine("S - select lower shape");
+        Console.WriteLine("Press enter...");
         Console.ReadLine();
+    }
+
+    private void ChangeDirection()
+    {
+        var keyInfo = Console.ReadKey();
+        while (keyInfo.Key != ConsoleKey.Enter)
+        {
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    Console.Clear();
+                    _drawing.ChangeShapeDirection(DirectionMove.Up);
+                    break;
+                case ConsoleKey.DownArrow:
+                    Console.Clear();
+                    _drawing.ChangeShapeDirection(DirectionMove.Down);
+                    break;
+                case ConsoleKey.LeftArrow:
+                    Console.Clear();
+                    _drawing.ChangeShapeDirection(DirectionMove.Left);
+                    break;
+                case ConsoleKey.RightArrow:
+                    Console.Clear();
+                    _drawing.ChangeShapeDirection(DirectionMove.Right);
+                    break;
+            }
+            keyInfo = Console.ReadKey();
+        }
+    }
+
+    private void DeleteShape()
+    {
+        Console.WriteLine("Enter shape name which you want delete...");
+        foreach (var s in _drawing.GetShapeList())
+        {
+            Console.WriteLine($"{s} ------> {s.ShapeName}");
+        }
+
+        var command = Console.ReadLine();
+        if (command is null)
+            return;
+        _drawing.DeleteShapeFromList(command);
+    }
+
+    private void InvokeSortOperation()
+    {
+        var perimeter = false;
+        var square = false;
+        Console.WriteLine("------------------------");
+        Console.WriteLine("1 ---- Sort by Perimeter");
+        Console.WriteLine("2 ---- Sort by Square");
+        
+        if(!int.TryParse(Console.ReadLine(), out var selection))
+            throw new FormatException();
+        if (selection == 1)
+            perimeter = true;
+        else
+            square = true;
+        
+        Console.WriteLine("Please, choose mode:");
+        Console.WriteLine("1 --- in descending order");
+        Console.WriteLine("2 --- in ascending order");
+
+        if (!int.TryParse(Console.ReadLine(), out var mode))
+            throw new FormatException();
+        if (!_drawing.Sort(mode, square, perimeter))
+        {
+            ErrorMessage("ERROR::Wrong operation!! Press enter...");
+        }
+    }
+
+    private void TryChangeCurrentShape()
+    {
+        var keyInfo = Console.ReadKey();
+        while (keyInfo.Key != ConsoleKey.Enter)
+        {
+            switch (keyInfo.Key)
+            {
+               case ConsoleKey.W:
+                   _drawing.SelectUpperShape();
+                   break;
+               case ConsoleKey.S:
+                    _drawing.SelectLowerShape();
+                   break;
+            }
+            keyInfo = Console.ReadKey();
+        }
     }
     
     public override void Update()

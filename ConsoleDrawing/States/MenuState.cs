@@ -1,15 +1,19 @@
 ﻿using System.Globalization;
+using ConsoleDrawing.Services;
 
 namespace ConsoleDrawing.States;
 
 public class MenuState : State
 {
-    public MenuState(ref Stack<State> states) :
+    private readonly SettingsService _settingsService;
+    
+    public MenuState(Stack<State> states) :
         base(states)
     {
-        
+        _settingsService = new SettingsService();
+        InitSettings();
     }
-        
+
     protected override void ShowMenu()
     {
         Console.Clear();
@@ -20,14 +24,23 @@ public class MenuState : State
 
         try
         {
-            ConsoleHandler(ConvertConsoleInputToInt());
+            ConsoleHandler(Convert.ToInt32(Console.ReadLine(), CultureInfo.CurrentCulture));
         }
         catch (FormatException)
         {
-            Console.WriteLine("ERROR::Wrong format!!");
-            Console.WriteLine("Press enter...");
+            ErrorMessage("ERROR::Wrong format!! Press enter...");
             Console.ReadLine();
         }
+        catch (OverflowException)
+        {
+            ErrorMessage("Value was either too large or too small! Press enter...");
+            Console.ReadLine();
+        }
+    }
+
+    private void InitSettings()
+    {
+        _settingsService.InstallSettingsFromFile();
     }
 
     protected override void ConsoleHandler(int selection)
@@ -44,19 +57,20 @@ public class MenuState : State
                 DeleteState();
                 break;
             default:
-                Console.WriteLine("Wrong operation, please try again!");
+                ErrorMessage("ERROR::Wrong operation, please try again! Press enter...");
+                Console.ReadLine();
                 break;
         }
     }
     
     private void AddDrawStateToStack()
     {
-        States.Push(new DrawState(States));
+        States.Push(new DrawState(States, SettingsService.ReadSettingsFile()));
     }
 
     private void AddSettingsStateToStack()
     {
-        States.Push(new SettingsState(States));
+        States.Push(new SettingsState(States, _settingsService));
     }
 
     public override void Update()

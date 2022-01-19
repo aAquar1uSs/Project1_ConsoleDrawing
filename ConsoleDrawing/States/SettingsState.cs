@@ -7,12 +7,11 @@ public class SettingsState : State
 {
     private readonly SettingsService _settingsService;
 
-    public SettingsState(Stack<State> states) : base(states)
+    public SettingsState(Stack<State> states, SettingsService service) : base(states)
     {
-        _settingsService = new SettingsService();
-        _settingsService.InstallSettingsFromFile();
+        _settingsService = service;
     }
-
+    
     protected override void ShowMenu()
     {
         Console.Clear();
@@ -21,14 +20,30 @@ public class SettingsState : State
         Console.WriteLine("2------Select File to Save------");
         Console.WriteLine("3--------Show all settings------");
         Console.WriteLine("0-------------Exit--------------");
+
         try
         {
-            ConsoleHandler(ConvertConsoleInputToInt());
+            ConsoleHandler(Convert.ToInt32(Console.ReadLine(), CultureInfo.CurrentCulture));
         }
         catch (FormatException)
         {
-            Console.Clear();
-            ShowMenu();
+            ErrorMessage("ERROR::Wrong format!! Press enter...");
+            Console.ReadLine();
+        }
+        catch (OverflowException)
+        {
+            ErrorMessage("Value was either too large or too small! Press enter...");
+            Console.ReadLine();
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            ErrorMessage("ERROR::The new console window size would force the console buffer " +
+                  "size to be too large. Press enter...");
+            Console.ReadLine();
+        }
+        catch (ArgumentNullException)
+        {
+            ErrorMessage("ERROR::Сould not read file, please try again! Press enter...");
         }
     }
 
@@ -38,25 +53,9 @@ public class SettingsState : State
         {
             case 1:
                 Console.Clear();
-                Console.WriteLine("Careful! This function only works on Windows! You sure? yes[y] or no[n]");
-                if (Console.ReadLine()!.ToLowerInvariant().Equals("y", StringComparison.Ordinal))
-                    try
-                    {
-                        _settingsService.InvokeResizeOperation();
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    {
-                        Console.WriteLine("ERROR::The new console window size would force the console buffer " +
-                                          "size to be too large.");
-                        Console.WriteLine("Press enter...");
-                        Console.ReadLine();
-                    }
-                    catch (FormatException)
-                    {
-                        Console.WriteLine("ERROR::Wrong format!!");
-                        Console.WriteLine("Press enter...");
-                        Console.ReadLine();
-                    }
+                ErrorMessage("Careful! This function works only on Windows! You sure? yes[y] or no[n]");
+                if (Console.ReadLine()!.ToLowerInvariant().Equals("y", StringComparison.OrdinalIgnoreCase)) 
+                    _settingsService.InvokeResizeOperation();
                 break;
             case 2:
                 _settingsService.SetFileForSave();
@@ -66,6 +65,10 @@ public class SettingsState : State
                 break;
             case 0:
                 DeleteState();
+                break;
+            default:
+                ErrorMessage("ERROR::Wrong operation, please try again! Press enter...");
+                Console.ReadLine();
                 break;
         }
     }
