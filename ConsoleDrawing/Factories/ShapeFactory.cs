@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using ConsoleDrawing.Models;
 
-namespace ConsoleDrawing.Services;
+namespace ConsoleDrawing.Factories;
 
 public static class ShapeFactory
 {
