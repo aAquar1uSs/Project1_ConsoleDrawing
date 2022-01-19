@@ -13,8 +13,7 @@ public class Point
         CoordX = x;
         CoordY = y;
     }
-
-
+    
     public void Movement(DirectionMove dirMove)
     {
         switch (dirMove)
@@ -31,8 +30,6 @@ public class Point
             case DirectionMove.Right:
                 CoordX++;
                 break;
-            default:
-               break;
         }
     }
 }

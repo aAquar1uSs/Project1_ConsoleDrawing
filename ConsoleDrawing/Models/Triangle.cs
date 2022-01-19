@@ -9,8 +9,10 @@ public class Triangle: Shape
     
     public override double SquareShape { get; }
 
-    public override Point Coordinates { get; }
+    public override Point LeftSideCoordinates { get; }
     
+    public override Point RightSideCoordinates { get; }
+
     public Triangle(string shapeName, bool isFilled) : base(shapeName, isFilled)
     {
         
@@ -20,13 +22,8 @@ public class Triangle: Shape
     {
         throw new NotImplementedException();
     }
-
-    public override void Update()
-    {
-        throw new NotImplementedException();
-    }
-
-    public override void Render()
+    
+    public override int[,] Render()
     {
         throw new NotImplementedException();
     }

@@ -9,8 +9,10 @@ public class Square : Shape
 
     public override double SquareShape => 0;
     
-    public override Point Coordinates { get; }
+    public override Point LeftSideCoordinates { get; }
     
+    public override Point RightSideCoordinates { get; }
+
     public Square(string shapeName, bool isFilled) : base(shapeName, isFilled)
     {
     }
@@ -19,13 +21,8 @@ public class Square : Shape
     {
         throw new NotImplementedException();
     }
-
-    public override void Update()
-    {
-        throw new NotImplementedException();
-    }
-
-    public override void Render()
+    
+    public override int[,] Render()
     {
         throw new NotImplementedException();
     }

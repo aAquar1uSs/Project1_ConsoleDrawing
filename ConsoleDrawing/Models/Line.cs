@@ -12,8 +12,10 @@ public class Line : Shape
 
     public override double SquareShape => 0;
     
-    public override Point Coordinates { get; }
+    public override Point LeftSideCoordinates { get; }
     
+    public override Point RightSideCoordinates { get; }
+
     public Line(string shapeName, Point coordX1Y1, Point coordX2Y2) : base(shapeName, false)
     {
         CoordX1Y1 = coordX1Y1;
@@ -26,13 +28,8 @@ public class Line : Shape
         CoordX1Y1.Movement(dirMove);
         CoordX2Y2.Movement(dirMove);
     }
-
-    public override void Update()
-    {
-        
-    }
-
-    public override void Render()
+    
+    public override int[,] Render()
     {
         throw new NotImplementedException();
     }
