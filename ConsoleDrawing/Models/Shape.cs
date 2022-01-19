@@ -10,7 +10,8 @@ public abstract class Shape
 
     public abstract double SquareShape { get; }
 
-    public abstract Point Coordinates { get; }
+    public abstract Point LeftSideCoordinates { get; }
+    public abstract Point RightSideCoordinates { get; }
 
     public bool IsFilled { get; set; }
     
@@ -21,10 +22,12 @@ public abstract class Shape
     }
     
     public abstract void Move(DirectionMove dirMove);
-
-    public abstract void Update();
-
-    public abstract void Render();
+    
+    /// <summary>
+    /// Draw shape in matrix.
+    /// </summary>
+    /// <returns>int[,]</returns>
+    public abstract int[,] Render();
 
 
 }

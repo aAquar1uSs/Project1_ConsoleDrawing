@@ -13,23 +13,22 @@ public class MenuState : State
         _settingsService = new SettingsService();
         TryApplySettings();
     }
-    
-    private void ApplySettings()
-    {
-        Console.Clear();
-        ErrorMessage("Do you want apply settings from the file?"+
-                     " Resize window works only on the Windows! If you want enter [y]");
-        if (Console.ReadLine()!.ToLowerInvariant().Equals("y", StringComparison.OrdinalIgnoreCase))
-            _settingsService.InstallSettingsFromFile();
-        else
-            _settingsService.InstallDefaultSettings();
-    }
 
+    /// <summary>
+    /// Try apply exists settings,
+    /// If an error occurs, the settings will be set to default 
+    /// </summary>
     private void TryApplySettings()
     {
         try
         {
-            ApplySettings();
+            Console.Clear();
+            ErrorMessage("Do you want apply settings from the file?"+
+                         " Resize window works only on the Windows! If you want enter [y]");
+            if (Console.ReadLine()!.ToLowerInvariant().Equals("y", StringComparison.OrdinalIgnoreCase))
+                _settingsService.InstallSettingsFromFile();
+            else
+                _settingsService.InstallDefaultSettings();
         }
         catch (ArgumentOutOfRangeException)
         {
@@ -83,11 +82,17 @@ public class MenuState : State
         }
     }
     
+    /// <summary>
+    /// Added draw state to the stack
+    /// </summary>
     private void AddDrawStateToStack()
     {
         States.Push(new DrawState(States, SettingsService.ReadSettingsFile()));
     }
 
+    /// <summary>
+    /// Added settings state to the stack
+    /// </summary>
     private void AddSettingsStateToStack()
     {
         States.Push(new SettingsState(States, _settingsService));
