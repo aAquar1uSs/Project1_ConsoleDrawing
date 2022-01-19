@@ -1,24 +1,29 @@
-﻿using System.Globalization;
+﻿namespace ConsoleDrawing.States;
 
-namespace ConsoleDrawing.States;
+public delegate void ErrorMessageHandler(string message);
 
 public abstract class State
 {
-    protected readonly Stack<State> States;
-
+    protected Stack<State> States { get; }
+    protected ErrorMessageHandler ErrorMessage { get; }
+    
     protected State(Stack<State> states)
     {
        States = states;
+       ErrorMessage += OutputErrorMessage;
     }
     
     protected abstract void ShowMenu();
+    
     protected abstract void ConsoleHandler(int selection);
 
-    public int ConvertConsoleInputToInt()
+    private void OutputErrorMessage(string message)
     {
-        return Convert.ToInt32(Console.ReadLine(), CultureInfo.CurrentCulture);
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine(message);
+        Console.ResetColor();
     }
-    
+
     protected void DeleteState()
     {
         States.Pop();
