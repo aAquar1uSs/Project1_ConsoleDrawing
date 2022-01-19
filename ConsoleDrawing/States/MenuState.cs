@@ -11,7 +11,32 @@ public class MenuState : State
         base(states)
     {
         _settingsService = new SettingsService();
-        InitSettings();
+        TryApplySettings();
+    }
+    
+    private void ApplySettings()
+    {
+        Console.Clear();
+        ErrorMessage("Do you want apply settings from the file?"+
+                     " Resize window works only on the Windows! If you want enter [y]");
+        if (Console.ReadLine()!.ToLowerInvariant().Equals("y", StringComparison.OrdinalIgnoreCase))
+            _settingsService.InstallSettingsFromFile();
+        else
+            _settingsService.InstallDefaultSettings();
+    }
+
+    private void TryApplySettings()
+    {
+        try
+        {
+            ApplySettings();
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            ErrorMessage("An error occurred while apply the settings, will be set by default. Press enter...");
+            _settingsService.InstallDefaultSettings();
+            Console.ReadLine();
+        }
     }
 
     protected override void ShowMenu()
@@ -37,12 +62,7 @@ public class MenuState : State
             Console.ReadLine();
         }
     }
-
-    private void InitSettings()
-    {
-        _settingsService.InstallSettingsFromFile();
-    }
-
+    
     protected override void ConsoleHandler(int selection)
     {
         switch (selection)

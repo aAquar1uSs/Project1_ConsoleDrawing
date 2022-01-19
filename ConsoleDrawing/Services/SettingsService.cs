@@ -19,15 +19,19 @@ public sealed class SettingsService
     {
         if (!SettingFileIsExit())
         {
-            _dtoSettings = new DtoSettings();
-            WriteToSettingsFile(_dtoSettings);
+            InstallDefaultSettings();
         }
         else
         {
             _dtoSettings = ReadSettingsFile();
         }
-        
         ResizeWindow();
+    }
+
+    public void InstallDefaultSettings()
+    {
+        _dtoSettings = new DtoSettings();
+        WriteToSettingsFile(_dtoSettings);
     }
     
     private static DtoSettings? DeserializeJson(Stream stream)
@@ -45,9 +49,9 @@ public sealed class SettingsService
     public static void WriteToSettingsFile(DtoSettings? settings)
     {
         settings = settings ?? throw new ArgumentNullException(nameof(settings));
-        
+        var stream = File.OpenWrite(SettingsFile);
         var json = JsonSerializer.Serialize(settings);
-        using var streamWriter = new StreamWriter(SettingsFile);
+        using var streamWriter = new StreamWriter(stream);
         streamWriter.WriteLine(json);
     }
     
@@ -66,7 +70,7 @@ public sealed class SettingsService
     private void ResizeWindow()
     {
 #pragma warning disable CA1416
-        Console.SetWindowSize(_dtoSettings.WindowWidth, _dtoSettings.WindowHeight);
+            Console.SetWindowSize(_dtoSettings.WindowWidth, _dtoSettings.WindowHeight);
 #pragma warning restore CA1416
     }
     
