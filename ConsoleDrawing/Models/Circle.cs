@@ -2,7 +2,6 @@
 
 namespace ConsoleDrawing.Models;
 
-[Serializable]
 public class Circle : Shape
 {
     public int Radius { get; set; }
@@ -16,7 +15,7 @@ public class Circle : Shape
     public override Point LeftSideCoordinates => new Point(Center.CoordX - Radius, Center.CoordY - Radius);
     
     public override Point RightSideCoordinates => new Point(Center.CoordX + Radius, Center.CoordY + Radius);
-
+    
     public Circle(string shapeName, Point center, int radius, bool isFilled) : base(shapeName, isFilled)
     {
         Radius = radius;
@@ -30,7 +29,7 @@ public class Circle : Shape
 
     public override int[,] Render()
     {
-        var circleCoords = new int[Radius * 2 + 5, Radius * 2 + 5];
+        var circleCoords = new int[Radius * 2 + 1, Radius * 2 + 1];
         var center = new Point(Center.CoordX - LeftSideCoordinates.CoordX, Center.CoordY - LeftSideCoordinates.CoordY);
         for (var i = 0; i < circleCoords.GetLength(0); i++)
         {
@@ -56,6 +55,6 @@ public class Circle : Shape
 
     public override string ToString()
     {
-        return "Circle";
+        return $"Circle::Name: {ShapeName}";
     }
 }
