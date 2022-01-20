@@ -2,15 +2,20 @@
 using ConsoleDrawing.DTO;
 using ConsoleDrawing.Enums;
 using ConsoleDrawing.Factories;
+using ConsoleDrawing.Services;
 
 namespace ConsoleDrawing.States;
 
 public class DrawState : State
 {
     private readonly DrawingPicture _drawing;
+
+    private readonly DrawService _drawService;
+    
     public DrawState(Stack<State> states, DtoSettings settings) : base(states)
     {
         _drawing = new DrawingPicture(settings.WindowHeight - 10, settings.WindowWidth - 4);
+        _drawService = settings.SaveFile != null ? new DrawService(settings.SaveFile) : new DrawService();
     }
 
     protected override void ShowMenu()
@@ -61,9 +66,11 @@ public class DrawState : State
                 DeleteShape();
                 break;
             case 5:
-                throw new NotImplementedException();
+                Upload();
+                break;
             case 6:
-                throw new NotImplementedException();
+                SaveToFile();
+                break;
             case 7:
                 InvokeSortOperation();
                 break;
@@ -100,6 +107,7 @@ public class DrawState : State
             CultureInfo.CurrentCulture));
         if (shape is null)
             throw new FormatException(nameof(shape));
+        
         if (!_drawing.AddShapeToList(shape))
         {
             ErrorMessage("The shape went beyond the canvas. Please try again!");
@@ -114,8 +122,8 @@ public class DrawState : State
         Console.WriteLine("ArrowDown - go down");
         Console.WriteLine("ArrowLeft - go left");
         Console.WriteLine("ArrowRight - go right");
-        Console.WriteLine("W - select upper shape");
-        Console.WriteLine("S - select lower shape");
+        Console.WriteLine("PageUp - select upper shape");
+        Console.WriteLine("PageDown - select lower shape");
         Console.WriteLine("Press enter...");
         Console.ReadLine();
     }
@@ -195,17 +203,32 @@ public class DrawState : State
         {
             switch (keyInfo.Key)
             {
-                case ConsoleKey.UpArrow:
+                case ConsoleKey.PageUp:
                     _drawing.SelectUpperShape();
                     break;
-                case ConsoleKey.DownArrow:
+                case ConsoleKey.PageDown:
                     _drawing.SelectLowerShape();
                     break;
             }
             keyInfo = Console.ReadKey();
         }
     }
-    
+
+
+    private void SaveToFile()
+    {
+        _drawService.SavePictureToFile(_drawing.GetShapeList());
+        Console.WriteLine("Your painting has been successfully installed!!!. Press enter...");
+        Console.ReadLine();
+    }
+
+    private void Upload()
+    {
+        var list = _drawService.UploadFromFile();
+        if (list is null)
+            return;
+        _drawing.SetShapeList(list);
+    }
     
     public override void Update()
     {
