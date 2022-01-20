@@ -8,34 +8,31 @@ public sealed class DrawService
 {
     private string SaveFile { get; set; }
 
+    private readonly JsonSerializerOptions _options;
+    
     public DrawService(string filename = "save.json")
     {
         SaveFile = filename;
-    }
-
-    public void SavePictureToFile(List<Shape> shapes)
-    {
-        var options = new JsonSerializerOptions
+        _options = new JsonSerializerOptions
         {
             WriteIndented = true,
             Converters = { new ShapeConverter() }
         };
+    }
+
+    public void SavePictureToFile(List<Shape> shapes)
+    {
         var stream = File.OpenWrite(SaveFile);
-        var json = JsonSerializer.Serialize(shapes, options);
+        var json = JsonSerializer.Serialize(shapes, _options);
         using var streamWriter = new StreamWriter(stream);
         streamWriter.WriteLine(json);
     }
 
     public List<Shape>? UploadFromFile()
     {
-        var options = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            Converters = { new ShapeConverter() }
-        };
         var stream = File.OpenRead(SaveFile);
         using var streamReader = new StreamReader(stream);
         var json = streamReader.ReadToEnd();
-        return JsonSerializer.Deserialize<List<Shape>>(json, options);
+        return JsonSerializer.Deserialize<List<Shape>>(json, _options);
     }
 }
