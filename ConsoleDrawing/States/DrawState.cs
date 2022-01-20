@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Text.Json;
 using ConsoleDrawing.DTO;
 using ConsoleDrawing.Enums;
 using ConsoleDrawing.Factories;
@@ -32,6 +33,7 @@ public class DrawState : State
         Console.WriteLine("7 - Sort");
         Console.WriteLine("8 - Help");
         Console.WriteLine("0 - Exit");
+        
         try
         { 
             ConsoleHandler(Convert.ToInt32(Console.ReadLine(), CultureInfo.CurrentCulture));
@@ -46,7 +48,6 @@ public class DrawState : State
             ErrorMessage("Value was either too large or too small! Press enter...");
             Console.ReadLine();
         }
-        
     }
 
     protected override void ConsoleHandler(int selection)
@@ -213,21 +214,41 @@ public class DrawState : State
             keyInfo = Console.ReadKey();
         }
     }
-
-
+    
     private void SaveToFile()
     {
-        _drawService.SavePictureToFile(_drawing.GetShapeList());
-        Console.WriteLine("Your painting has been successfully installed!!!. Press enter...");
-        Console.ReadLine();
+        try
+        {
+            _drawService.SavePictureToFile(_drawing.GetShapeList());
+            Console.WriteLine("Your painting has been successfully installed!!! Press enter...");
+            Console.ReadLine();
+        }
+        catch (NotSupportedException)
+        {
+            ErrorMessage("Error occured when file had been saved. Press enter");
+            Console.ReadLine();
+        }
     }
 
     private void Upload()
     {
-        var list = _drawService.UploadFromFile();
-        if (list is null)
-            return;
-        _drawing.SetShapeList(list);
+        try
+        {
+            var list = _drawService.UploadFromFile();
+            if (list is null)
+                return;
+            _drawing.SetShapeList(list);
+        }
+        catch (JsonException)
+        {
+            ErrorMessage("Error occured when file had been uploaded. Press enter");
+            Console.ReadLine();
+        }
+        catch (NotSupportedException)
+        {
+            ErrorMessage("Error occured when file had been uploaded. Press enter");
+            Console.ReadLine();
+        }
     }
     
     public override void Update()
