@@ -9,7 +9,7 @@ public class DrawingPicture
         'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 
     private List<Shape> _shapes = new();
-    
+
     private char[,] Canvas { get; set; }
     
     private int CanvasHeight { get; }
@@ -18,13 +18,23 @@ public class DrawingPicture
 
     private int Current { get; set; }
 
-    private Shape CurrentShape => _shapes.Count == 0 ? null : _shapes[Current];
+    private Shape CurrentShape => (_shapes.Count == 0 ? null : _shapes[Current])!;
 
     public DrawingPicture(int canvasHeight = 50, int canvasWidth = 120)
     {
         CanvasHeight = canvasHeight;
         CanvasWidth = canvasWidth;
         Canvas = new char[CanvasHeight + 2, CanvasWidth + 2];
+    }
+    
+    public List<Shape> GetShapeList()
+    {
+        return _shapes;
+    }
+
+    public void SetShapeList(List<Shape> shapes)
+    {
+        _shapes = shapes;
     }
 
     private void BuildCanvas()
@@ -38,8 +48,8 @@ public class DrawingPicture
         }
         for (var i = 0; i < Canvas.GetLength(0); i++)
         {
-            Canvas[i, 0] = '/';
-            Canvas[i, Canvas.GetLength(1)-1] = '/';
+            Canvas[i, 0] = '|';
+            Canvas[i, Canvas.GetLength(1)-1] = '|';
         }
         for (var i = 0; i < Canvas.GetLength(1); i++)
         {
@@ -58,19 +68,14 @@ public class DrawingPicture
 
     private bool CheckCollision(DirectionMove dir)
     {
-        switch (dir)
+        return dir switch
         {
-            case DirectionMove.Up:
-                return CurrentShape.LeftSideCoordinates.CoordY != 0;
-            case DirectionMove.Down:
-                return CurrentShape.RightSideCoordinates.CoordY != CanvasHeight - 1;
-            case DirectionMove.Left:
-                return CurrentShape.LeftSideCoordinates.CoordX != 0;
-            case DirectionMove.Right:
-                return CurrentShape.RightSideCoordinates.CoordX != CanvasWidth - 1;
-            default:
-                return false;
-        }
+            DirectionMove.Up => CurrentShape.LeftSideCoordinates.CoordY != 1,
+            DirectionMove.Down => CurrentShape.RightSideCoordinates.CoordY <= CanvasHeight - 1,
+            DirectionMove.Left => CurrentShape.LeftSideCoordinates.CoordX != 1,
+            DirectionMove.Right => CurrentShape.RightSideCoordinates.CoordX <= CanvasWidth - 1,
+            _ => false
+        };
     }
     
     public bool AddShapeToList(Shape shape)
@@ -122,8 +127,7 @@ public class DrawingPicture
 
     public void SelectUpperShape()
     {
-        var max = _shapes.Count - 1;
-        if (Current == max)
+        if (Current == _shapes.Count - 1)
             return;
         Current++;
         Console.WriteLine($"Current shape: {_shapes[Current]}");
@@ -136,12 +140,7 @@ public class DrawingPicture
         Current--;
         Console.WriteLine($"Current shape: {_shapes[Current]}");
     }
-    
-    public List<Shape> GetShapeList()
-    {
-        return _shapes;
-    }
-    
+
     private char[,] ToPicture()
     {
         BuildCanvas();
@@ -154,7 +153,7 @@ public class DrawingPicture
                 {
                     if (shapeMatrix[line, column] == 1)
                     {
-                        Canvas[line + _shapes[i].LeftSideCoordinates.CoordY + 1, column + _shapes[i].LeftSideCoordinates.CoordX + 1] = _levels[i];
+                        Canvas[line + _shapes[i].LeftSideCoordinates.CoordY, column + _shapes[i].LeftSideCoordinates.CoordX] = _levels[i];
                     }
                 }
             }
