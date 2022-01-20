@@ -49,8 +49,11 @@ public sealed class SettingsService
     public static void WriteToSettingsFile(DtoSettings? settings)
     {
         settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        
         var stream = File.OpenWrite(SettingsFile);
-        var json = JsonSerializer.Serialize(settings);
+        var json = JsonSerializer.Serialize(settings, options);
         using var streamWriter = new StreamWriter(stream);
         streamWriter.WriteLine(json);
     }

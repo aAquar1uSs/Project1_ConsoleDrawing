@@ -23,7 +23,7 @@ public class MenuState : State
         try
         {
             Console.Clear();
-            ErrorMessage("Do you want apply settings from the file?"+
+            Console.WriteLine("Do you want apply settings from the file?"+
                          " Resize window works only on the Windows! If you want enter [y]");
             if (Console.ReadLine()!.ToLowerInvariant().Equals("y", StringComparison.OrdinalIgnoreCase))
                 _settingsService.InstallSettingsFromFile();
