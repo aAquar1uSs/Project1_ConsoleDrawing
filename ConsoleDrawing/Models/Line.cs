@@ -1,11 +1,12 @@
-﻿using ConsoleDrawing.Enums;
+﻿using System.Text.Json.Serialization;
+using ConsoleDrawing.Enums;
 
 namespace ConsoleDrawing.Models;
 
-[Serializable]
 public class Line : Shape
 {
     public Point CoordX1Y1 { get; set; }
+    
     public Point CoordX2Y2 { get; set; }
 
     public override double Perimeter => 0;
@@ -13,9 +14,10 @@ public class Line : Shape
     public override double SquareShape => 0;
     
     public override Point LeftSideCoordinates { get; }
-    
-    public override Point RightSideCoordinates { get; }
 
+    public override Point RightSideCoordinates { get; }
+    
+    [JsonConstructor]
     public Line(string shapeName, Point coordX1Y1, Point coordX2Y2) : base(shapeName, false)
     {
         CoordX1Y1 = coordX1Y1;

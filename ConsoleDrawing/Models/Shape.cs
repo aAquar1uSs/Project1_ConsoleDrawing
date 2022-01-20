@@ -10,17 +10,26 @@ public abstract class Shape
 
     public abstract double SquareShape { get; }
 
+    /// <summary>
+    /// Coordinates which exist in left side.
+    /// For check to collision.
+    /// </summary>
     public abstract Point LeftSideCoordinates { get; }
+    
+    /// <summary>
+    /// Coordinates which exist in right side.
+    /// For check to collision.
+    /// </summary>
     public abstract Point RightSideCoordinates { get; }
 
     public bool IsFilled { get; set; }
     
-    protected Shape(string shapeName, bool isFilled)
+    public Shape(string shapeName, bool isFilled)
     {
         ShapeName = shapeName;
         this.IsFilled = isFilled;
     }
-    
+
     public abstract void Move(DirectionMove dirMove);
     
     /// <summary>

@@ -2,16 +2,15 @@
 
 namespace ConsoleDrawing.Models;
 
-[Serializable]
 public class Point
 {
     public int CoordX { get; set; }
     public int CoordY { get; set; }
-
-    public Point(int x, int y)
+    
+    public Point(int coordX, int coordY)
     {
-        CoordX = x;
-        CoordY = y;
+        CoordX = coordX;
+        CoordY = coordY;
     }
     
     public void Movement(DirectionMove dirMove)
