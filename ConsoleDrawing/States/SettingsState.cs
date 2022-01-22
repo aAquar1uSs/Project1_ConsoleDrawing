@@ -44,6 +44,7 @@ public class SettingsState : State
         catch (ArgumentNullException)
         {
             ErrorMessage("ERROR::Сould not read file, please try again! Press enter...");
+            Console.ReadLine();
         }
     }
 

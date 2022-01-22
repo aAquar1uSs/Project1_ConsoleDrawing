@@ -39,7 +39,7 @@ public abstract class State
         States.Pop();
     }
     /// <summary>
-    /// Updates states
+    /// Update states
     /// </summary>
     public abstract void Update();
 }

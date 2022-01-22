@@ -40,7 +40,7 @@ public class DrawState : State
         }    
         catch (FormatException)
         { 
-            ErrorMessage("ERROR::Wrong format!! Press enter...");
+            ErrorMessage("ERROR::Invalid arguments!! Press enter...");
             Console.ReadLine();
         }
         catch (OverflowException)
@@ -82,7 +82,7 @@ public class DrawState : State
                 DeleteState();
                 break;
             default:
-                ErrorMessage("ERROR::Wrong format!! Press enter...");
+                ErrorMessage("ERROR::Wrong operation, please try again! Press enter...");
                 Console.ReadLine();
                 break;
         }
@@ -96,6 +96,7 @@ public class DrawState : State
         Console.WriteLine("3 - Add triangle");
         Console.WriteLine("4 - Add rectangle");
         Console.WriteLine("5 - Add square");
+        Console.WriteLine("0 - Exit");
         
         AddShapeToPicture();
 
@@ -104,8 +105,12 @@ public class DrawState : State
     
     private void AddShapeToPicture()
     {
-        var shape = ShapeFactory.ResolveShapes(Convert.ToInt32(Console.ReadLine(),
-            CultureInfo.CurrentCulture));
+        var choice = Convert.ToInt32(Console.ReadLine(),
+            CultureInfo.CurrentCulture);
+        if (choice == 0)
+            return;
+        
+        var shape = ShapeFactory.ResolveShapes(choice);
         if (shape is null)
             throw new FormatException(nameof(shape));
         
@@ -162,7 +167,7 @@ public class DrawState : State
         Console.WriteLine("Enter shape name which you want delete...");
         foreach (var s in _drawing.GetShapeList())
         {
-            Console.WriteLine($"{s} ------> {s.ShapeName}");
+            Console.WriteLine($"{s}");
         }
 
         var command = Console.ReadLine();
@@ -199,6 +204,8 @@ public class DrawState : State
 
     private void TryChangeCurrentShape()
     {
+        Console.WriteLine("PageUp - select upper shape");
+        Console.WriteLine("PageDown - select lower shape");
         var keyInfo = Console.ReadKey();
         while (keyInfo.Key != ConsoleKey.Enter)
         {

@@ -82,17 +82,11 @@ public class MenuState : State
         }
     }
     
-    /// <summary>
-    /// Added draw state to the stack
-    /// </summary>
     private void AddDrawStateToStack()
     {
         States.Push(new DrawState(States, SettingsService.ReadSettingsFile()));
     }
-
-    /// <summary>
-    /// Added settings state to the stack
-    /// </summary>
+    
     private void AddSettingsStateToStack()
     {
         States.Push(new SettingsState(States, _settingsService));
