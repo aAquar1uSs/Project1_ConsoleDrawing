@@ -8,7 +8,6 @@ public class ShapeConverter : JsonConverter<Shape>
 {
     private enum TypeDiscriminator
     {
-        Shape = 0,
         Circle = 1,
         Line = 2,
         Rectangle = 3,
@@ -55,7 +54,7 @@ public class ShapeConverter : JsonConverter<Shape>
                     throw new JsonException();
                 }
 
-                baseClass = (Circle)JsonSerializer.Deserialize(ref reader, typeof(Circle));
+                baseClass = (Circle)JsonSerializer.Deserialize(ref reader, typeof(Circle))!;
                 break;
             case TypeDiscriminator.Line:
                 if (!reader.Read() || reader.GetString() != "TypeValue")
@@ -68,7 +67,7 @@ public class ShapeConverter : JsonConverter<Shape>
                     throw new JsonException();
                 }
 
-                baseClass = (Line)JsonSerializer.Deserialize(ref reader, typeof(Line));
+                baseClass = (Line)JsonSerializer.Deserialize(ref reader, typeof(Line))!;
                 break;
             case TypeDiscriminator.Rectangle:
                 if (!reader.Read() || reader.GetString() != "TypeValue")
@@ -81,7 +80,7 @@ public class ShapeConverter : JsonConverter<Shape>
                     throw new JsonException();
                 }
 
-                baseClass = (Rectangle)JsonSerializer.Deserialize(ref reader, typeof(Rectangle));
+                baseClass = (Rectangle)JsonSerializer.Deserialize(ref reader, typeof(Rectangle))!;
                 break;
             case TypeDiscriminator.Square:
                 if (!reader.Read() || reader.GetString() != "TypeValue")
@@ -94,7 +93,7 @@ public class ShapeConverter : JsonConverter<Shape>
                     throw new JsonException();
                 }
 
-                baseClass = (Square)JsonSerializer.Deserialize(ref reader, typeof(Square));
+                baseClass = (Square)JsonSerializer.Deserialize(ref reader, typeof(Square))!;
                 break;
             case TypeDiscriminator.Triangle:
                 if (!reader.Read() || reader.GetString() != "TypeValue")
@@ -107,7 +106,7 @@ public class ShapeConverter : JsonConverter<Shape>
                     throw new JsonException();
                 }
 
-                baseClass = (Triangle)JsonSerializer.Deserialize(ref reader, typeof(Triangle));
+                baseClass = (Triangle)JsonSerializer.Deserialize(ref reader, typeof(Triangle))!;
                 break;
             default:
                 throw new NotSupportedException();
