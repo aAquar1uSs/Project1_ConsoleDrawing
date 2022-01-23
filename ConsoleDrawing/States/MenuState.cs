@@ -69,12 +69,15 @@ public class MenuState : State
             case 1:
                 AddDrawStateToStack();
                 break;
+            
             case 2:
                 AddSettingsStateToStack();
                 break;
+            
             case 0:
                 DeleteState();
                 break;
+            
             default:
                 ErrorMessage("ERROR::Wrong operation, please try again! Press enter...");
                 Console.ReadLine();

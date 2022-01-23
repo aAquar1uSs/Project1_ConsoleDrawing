@@ -57,30 +57,39 @@ public class DrawState : State
             case 1:
                 InvokeShapesMenu();
                 break;
+            
             case 2:
                 ChangeDirection();
                 break;
+            
             case 3:
                 TryChangeCurrentShape();
                 break;
+            
             case 4:
                 DeleteShape();
                 break;
+            
             case 5:
                 Upload();
                 break;
+            
             case 6:
                 SaveToFile();
                 break;
+            
             case 7:
                 InvokeSortOperation();
                 break;
+            
             case 8:
                 HelpMenu();
                 break;
+            
             case 0:
                 DeleteState();
                 break;
+            
             default:
                 ErrorMessage("ERROR::Wrong operation, please try again! Press enter...");
                 Console.ReadLine();
@@ -145,14 +154,17 @@ public class DrawState : State
                     Console.Clear();
                     _drawing.ChangeShapeDirection(DirectionMove.Up);
                     break;
+                
                 case ConsoleKey.DownArrow:
                     Console.Clear();
                     _drawing.ChangeShapeDirection(DirectionMove.Down);
                     break;
+                
                 case ConsoleKey.LeftArrow:
                     Console.Clear();
                     _drawing.ChangeShapeDirection(DirectionMove.Left);
                     break;
+                
                 case ConsoleKey.RightArrow:
                     Console.Clear();
                     _drawing.ChangeShapeDirection(DirectionMove.Right);
@@ -180,6 +192,7 @@ public class DrawState : State
     {
         var perimeter = false;
         var square = false;
+        
         Console.WriteLine("------------------------");
         Console.WriteLine("1 ---- Sort by Perimeter");
         Console.WriteLine("2 ---- Sort by Square");
@@ -206,6 +219,7 @@ public class DrawState : State
     {
         Console.WriteLine("PageUp - select upper shape");
         Console.WriteLine("PageDown - select lower shape");
+        
         var keyInfo = Console.ReadKey();
         while (keyInfo.Key != ConsoleKey.Enter)
         {
@@ -214,6 +228,7 @@ public class DrawState : State
                 case ConsoleKey.PageUp:
                     _drawing.SelectUpperShape();
                     break;
+                
                 case ConsoleKey.PageDown:
                     _drawing.SelectLowerShape();
                     break;

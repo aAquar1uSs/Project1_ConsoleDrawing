@@ -80,10 +80,10 @@ public class DrawingPicture
     
     public bool AddShapeToList(Shape shape)
     {
-        if (shape.LeftSideCoordinates.CoordX >= CanvasWidth ||
-            shape.LeftSideCoordinates.CoordY >= CanvasHeight ||
-            shape.RightSideCoordinates.CoordX >= CanvasWidth ||
-            shape.RightSideCoordinates.CoordY >= CanvasHeight)
+        if (shape.LeftSideCoordinates.CoordX >= CanvasWidth 
+            || shape.LeftSideCoordinates.CoordY >= CanvasHeight
+            || shape.RightSideCoordinates.CoordX >= CanvasWidth
+            || shape.RightSideCoordinates.CoordY >= CanvasHeight)
         {
             return false;
         }
@@ -107,18 +107,22 @@ public class DrawingPicture
             case true when mode == 1:
                 _shapes = _shapes.OrderByDescending(x => x.Perimeter).ToList();
                 return true;
+            
             case true when mode == 2:
                 _shapes = _shapes.OrderBy(x => x.Perimeter).ToList();
                 return true;
+            
             default:
                 switch (bySquare)
                 {
                     case true when mode == 1:
                         _shapes = _shapes.OrderByDescending(x => x.SquareShape).ToList();
                         return true;
+                    
                     case true when mode == 2:
                         _shapes = _shapes.OrderBy(x => x.SquareShape).ToList();
                         return true;
+                    
                     default:
                         return false;
                 }

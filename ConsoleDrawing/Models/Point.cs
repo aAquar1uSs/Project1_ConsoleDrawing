@@ -22,12 +22,15 @@ public class Point
             case DirectionMove.Up:
                 CoordY--;
                 break;
+            
             case DirectionMove.Down:
                 CoordY++;
                 break;
+            
             case DirectionMove.Left:
                 CoordX--;
                 break;
+            
             case DirectionMove.Right:
                 CoordX++;
                 break;

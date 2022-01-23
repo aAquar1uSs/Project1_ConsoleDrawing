@@ -58,15 +58,19 @@ public class SettingsState : State
                 if (Console.ReadLine()!.ToLowerInvariant().Equals("y", StringComparison.OrdinalIgnoreCase)) 
                     _settingsService.InvokeResizeOperation();
                 break;
+            
             case 2:
                 _settingsService.SetFileForSave();
                 break;
+            
             case 3:
                 _settingsService.ShowSettings();
                 break;
+            
             case 0:
                 DeleteState();
                 break;
+            
             default:
                 ErrorMessage("ERROR::Wrong operation, please try again! Press enter...");
                 Console.ReadLine();
