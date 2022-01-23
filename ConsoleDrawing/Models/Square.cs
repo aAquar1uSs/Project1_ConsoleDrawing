@@ -1,32 +1,20 @@
-﻿using ConsoleDrawing.Enums;
+﻿
+
+using ConsoleDrawing.Attributes;
 
 namespace ConsoleDrawing.Models;
 
-[Serializable]
-public class Square : Shape
+[RectangleValidation(0, 0)]
+public class Square : Rectangle
 {
-    public override double Perimeter { get; }
-
-    public override double SquareShape => 0;
-    
-    public override Point Coordinates { get; }
-    
-    public Square(string shapeName, bool isFilled) : base(shapeName, isFilled)
+    public Square(string shapeName, Point leftUpperPoint, int side, bool isFilled) 
+        : base(shapeName, leftUpperPoint, side, side, isFilled)
     {
-    }
-    
-    public override void Move(DirectionMove dirMove)
-    {
-        throw new NotImplementedException();
+        
     }
 
-    public override void Update()
+    public override string ToString()
     {
-        throw new NotImplementedException();
-    }
-
-    public override void Render()
-    {
-        throw new NotImplementedException();
+        return $"Square::Name: ${ShapeName} || Side: {Height} || Square: {SquareShape}";
     }
 }

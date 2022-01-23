@@ -10,21 +10,31 @@ public abstract class Shape
 
     public abstract double SquareShape { get; }
 
-    public abstract Point Coordinates { get; }
+    /// <summary>
+    /// Coordinates which exist in left side.
+    /// </summary>
+    public abstract Point LeftSideCoordinates { get; }
+    
+    /// <summary>
+    /// Coordinates which exist in right side.
+    /// </summary>
+    public abstract Point RightSideCoordinates { get; }
 
     public bool IsFilled { get; set; }
     
-    protected Shape(string shapeName, bool isFilled)
+    public Shape(string shapeName, bool isFilled)
     {
         ShapeName = shapeName;
         this.IsFilled = isFilled;
     }
-    
+
     public abstract void Move(DirectionMove dirMove);
-
-    public abstract void Update();
-
-    public abstract void Render();
+    
+    /// <summary>
+    /// Draw shape in matrix.
+    /// </summary>
+    /// <returns>int[,]</returns>
+    public abstract int[,] Render();
 
 
 }

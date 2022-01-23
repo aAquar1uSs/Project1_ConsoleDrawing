@@ -13,6 +13,13 @@ public class DtoSettings
     [JsonPropertyName("save_file")]
     public string? SaveFile { get ; set ; }
 
+    public DtoSettings(int windowWidth = 120, int windowHeight = 50, string saveFile = "default.json")
+    {
+        WindowHeight = windowHeight;
+        WindowWidth = windowWidth;
+        SaveFile = saveFile;
+    }
+    
     public override string ToString()
     {
         return $"Window height: {WindowHeight}" + '\n' +

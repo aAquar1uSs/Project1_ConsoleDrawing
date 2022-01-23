@@ -1,15 +1,43 @@
 ﻿using System.Globalization;
+using ConsoleDrawing.Services;
 
 namespace ConsoleDrawing.States;
 
 public class MenuState : State
 {
-    public MenuState(ref Stack<State> states) :
+    private readonly SettingsService _settingsService;
+    
+    public MenuState(Stack<State> states) :
         base(states)
     {
-        
+        _settingsService = new SettingsService();
+        TryApplySettings();
     }
-        
+
+    /// <summary>
+    /// Try apply exists settings,
+    /// If an error occurs, the settings will be set to default 
+    /// </summary>
+    private void TryApplySettings()
+    {
+        try
+        {
+            Console.Clear();
+            Console.WriteLine("Do you want apply settings from the file?"+
+                         " Resize window works only on the Windows! If you want enter [y]");
+            if (Console.ReadLine()!.ToLowerInvariant().Equals("y", StringComparison.OrdinalIgnoreCase))
+                _settingsService.InstallSettingsFromFile();
+            else
+                _settingsService.InstallDefaultSettings();
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            ErrorMessage("An error occurred while apply the settings, will be set by default. Press enter...");
+            _settingsService.InstallDefaultSettings();
+            Console.ReadLine();
+        }
+    }
+
     protected override void ShowMenu()
     {
         Console.Clear();
@@ -20,16 +48,20 @@ public class MenuState : State
 
         try
         {
-            ConsoleHandler(ConvertConsoleInputToInt());
+            ConsoleHandler(Convert.ToInt32(Console.ReadLine(), CultureInfo.CurrentCulture));
         }
         catch (FormatException)
         {
-            Console.WriteLine("ERROR::Wrong format!!");
-            Console.WriteLine("Press enter...");
+            ErrorMessage("ERROR::Wrong format! Press enter...");
+            Console.ReadLine();
+        }
+        catch (OverflowException)
+        {
+            ErrorMessage("Value was either too large or too small! Press enter...");
             Console.ReadLine();
         }
     }
-
+    
     protected override void ConsoleHandler(int selection)
     {
         switch (selection)
@@ -37,26 +69,30 @@ public class MenuState : State
             case 1:
                 AddDrawStateToStack();
                 break;
+            
             case 2:
                 AddSettingsStateToStack();
                 break;
+            
             case 0:
                 DeleteState();
                 break;
+            
             default:
-                Console.WriteLine("Wrong operation, please try again!");
+                ErrorMessage("ERROR::Wrong operation, please try again! Press enter...");
+                Console.ReadLine();
                 break;
         }
     }
     
     private void AddDrawStateToStack()
     {
-        States.Push(new DrawState(States));
+        States.Push(new DrawState(States, SettingsService.ReadSettingsFile()));
     }
-
+    
     private void AddSettingsStateToStack()
     {
-        States.Push(new SettingsState(States));
+        States.Push(new SettingsState(States, _settingsService));
     }
 
     public override void Update()

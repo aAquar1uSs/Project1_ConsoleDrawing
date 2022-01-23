@@ -6,55 +6,60 @@ namespace ConsoleDrawing.Services;
 
 public sealed class SettingsService
 {
-    private DtoSettings? _dtoSettings = new();
+    private DtoSettings _dtoSettings = new();
     private const string SettingsFile = "settings.json";
     
-    public DtoSettings? ReadSettingsFile()
+    public static DtoSettings ReadSettingsFile()
     {
-        return DeserializeJson(File.OpenRead(SettingsFile));
+        var settings = DeserializeJson(File.OpenRead(SettingsFile));
+        return settings ?? new DtoSettings();
     }
     
     public void InstallSettingsFromFile()
     {
         if (!SettingFileIsExit())
         {
-            _dtoSettings = new DtoSettings()
-            {
-                WindowHeight = Console.WindowHeight,
-                WindowWidth = Console.WindowWidth,
-                SaveFile = "default.json"
-            };
-            WriteToSettingsFile(_dtoSettings);
+            InstallDefaultSettings();
         }
         else
         {
             _dtoSettings = ReadSettingsFile();
         }
+        ResizeWindow();
+    }
+
+    public void InstallDefaultSettings()
+    {
+        _dtoSettings = new DtoSettings();
+        WriteToSettingsFile(_dtoSettings);
     }
     
-    private DtoSettings? DeserializeJson(Stream stream)
+    private static DtoSettings? DeserializeJson(Stream stream)
     {
         using var streamReader = new StreamReader(stream);
         var json = streamReader.ReadToEnd();
-        return _dtoSettings = JsonSerializer.Deserialize<DtoSettings>(json);
+        return JsonSerializer.Deserialize<DtoSettings>(json);
     }
 
-    public bool SettingFileIsExit()
+    public static bool SettingFileIsExit()
     {
         return File.Exists(SettingsFile);
     }
 
-    public void WriteToSettingsFile(DtoSettings? settings)
+    public static void WriteToSettingsFile(DtoSettings? settings)
     {
-        var json = JsonSerializer.Serialize(settings);
-        using var streamWriter = new StreamWriter(SettingsFile);
+        settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        
+        var stream = File.OpenWrite(SettingsFile);
+        var json = JsonSerializer.Serialize(settings, options);
+        using var streamWriter = new StreamWriter(stream);
         streamWriter.WriteLine(json);
     }
     
     public void InvokeResizeOperation()
     {
-        _dtoSettings = _dtoSettings ?? throw new ArgumentException(nameof(_dtoSettings));
-            
         Console.WriteLine("Max height: " + Console.LargestWindowHeight);
         Console.WriteLine("Max width: " + Console.LargestWindowWidth);
         Console.WriteLine("Please, enter a value for the window height: ");
@@ -62,14 +67,13 @@ public sealed class SettingsService
         Console.WriteLine("Please, enter a value for the window width: ");
         _dtoSettings.WindowWidth = Convert.ToInt32(Console.ReadLine(), CultureInfo.CurrentCulture);
         ResizeWindow();
+        WriteToSettingsFile(_dtoSettings);
     }
     
     private void ResizeWindow()
     {
-        _dtoSettings = _dtoSettings ?? throw new ArgumentException(nameof(_dtoSettings));
 #pragma warning disable CA1416
-        Console.SetWindowSize(_dtoSettings.WindowWidth, _dtoSettings.WindowHeight);
-        WriteToSettingsFile(_dtoSettings);
+            Console.SetWindowSize(_dtoSettings.WindowWidth, _dtoSettings.WindowHeight);
 #pragma warning restore CA1416
     }
     
@@ -83,8 +87,6 @@ public sealed class SettingsService
     
     public void SetFileForSave()
     {
-        _dtoSettings = _dtoSettings ?? throw new ArgumentException(nameof(_dtoSettings));
-        
         Console.WriteLine("Please, enter a filename...");
         _dtoSettings.SaveFile = Console.ReadLine();
         WriteToSettingsFile(_dtoSettings);

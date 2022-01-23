@@ -1,20 +1,20 @@
-﻿using ConsoleDrawing.Enums;
+﻿using ConsoleDrawing.Attributes;
+using ConsoleDrawing.Enums;
 
 namespace ConsoleDrawing.Models;
 
-[Serializable]
+[PointValidation(0, 0)]
 public class Point
 {
-    public int CoordX { get; set; }
-    public int CoordY { get; set; }
-
-    public Point(int x, int y)
+    public int CoordX { get; private set; }
+    public int CoordY { get; private set; }
+    
+    public Point(int coordX, int coordY)
     {
-        CoordX = x;
-        CoordY = y;
+        CoordX = coordX;
+        CoordY = coordY;
     }
-
-
+    
     public void Movement(DirectionMove dirMove)
     {
         switch (dirMove)
@@ -22,17 +22,23 @@ public class Point
             case DirectionMove.Up:
                 CoordY--;
                 break;
+            
             case DirectionMove.Down:
                 CoordY++;
                 break;
+            
             case DirectionMove.Left:
                 CoordX--;
                 break;
+            
             case DirectionMove.Right:
                 CoordX++;
                 break;
-            default:
-               break;
         }
+    }
+
+    public override string ToString()
+    {
+        return $"X: {CoordX}|| Y: {CoordY}";
     }
 }

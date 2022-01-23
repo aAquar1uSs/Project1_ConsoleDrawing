@@ -5,14 +5,17 @@ namespace ConsoleDrawing;
 
 public sealed class DrawApplication
 {
-    private Stack<State> _states = new();
-    private bool _isExit = false;
+    private readonly Stack<State> _states = new();
+    private bool _isExit;
 
     public DrawApplication()
     {
-        _states.Push(new MenuState(ref _states));    
+        _states.Push(new MenuState(_states));    
     }
 
+    /// <summary>
+    /// Runs application.
+    /// </summary>
     public StatusCode Run(string[] args)
     {
         do
