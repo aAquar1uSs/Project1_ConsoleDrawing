@@ -52,7 +52,7 @@ public class MenuState : State
         }
         catch (FormatException)
         {
-            ErrorMessage("ERROR::Wrong format!! Press enter...");
+            ErrorMessage("ERROR::Wrong format! Press enter...");
             Console.ReadLine();
         }
         catch (OverflowException)

@@ -40,7 +40,7 @@ public class DrawState : State
         }    
         catch (FormatException)
         { 
-            ErrorMessage("ERROR::Invalid arguments!! Press enter...");
+            ErrorMessage("ERROR::Invalid arguments! Press enter...");
             Console.ReadLine();
         }
         catch (OverflowException)
@@ -199,7 +199,7 @@ public class DrawState : State
             throw new FormatException();
         
         if (!_drawing.Sort(mode, square, perimeter))
-            ErrorMessage("ERROR::Invalid arguments!! Press enter...");
+            ErrorMessage("ERROR::Invalid arguments! Press enter...");
     }
 
     private void TryChangeCurrentShape()
@@ -227,7 +227,7 @@ public class DrawState : State
         try
         {
             _drawService.SavePictureToFile(_drawing.GetShapeList());
-            Console.WriteLine("Your painting has been successfully installed!!! Press enter...");
+            Console.WriteLine("Your painting has been successfully installed! Press enter...");
             Console.ReadLine();
         }
         catch (NotSupportedException)

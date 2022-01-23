@@ -10,7 +10,7 @@ public class DrawingPicture
 
     private List<Shape> _shapes = new();
 
-    private char[,] Canvas { get; set; }
+    private char[,] Canvas { get; }
     
     private int CanvasHeight { get; }
     
@@ -147,13 +147,14 @@ public class DrawingPicture
         for(var i = 0; i < _shapes.Count; i++)
         {
             var shapeMatrix = _shapes[i].Render();
-            for (var line = 0; line < shapeMatrix.GetLength(0); line++)
+            for (var x = 0; x < shapeMatrix.GetLength(0); x++)
             {
-                for (var column = 0; column < shapeMatrix.GetLength(1); column++)
+                for (var y = 0; y < shapeMatrix.GetLength(1); y++)
                 {
-                    if (shapeMatrix[line, column] == 1)
+                    if (shapeMatrix[x, y] == 1)
                     {
-                        Canvas[line + _shapes[i].LeftSideCoordinates.CoordY, column + _shapes[i].LeftSideCoordinates.CoordX] = _levels[i];
+                        Canvas[x + _shapes[i].LeftSideCoordinates.CoordY, 
+                            y + _shapes[i].LeftSideCoordinates.CoordX] = _levels[i];
                     }
                 }
             }
