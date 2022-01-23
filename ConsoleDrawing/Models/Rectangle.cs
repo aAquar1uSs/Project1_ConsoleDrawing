@@ -1,7 +1,9 @@
-﻿using ConsoleDrawing.Enums;
+﻿using ConsoleDrawing.Attributes;
+using ConsoleDrawing.Enums;
 
 namespace ConsoleDrawing.Models;
 
+[RectangleValidation(0, 0)]
 public class Rectangle : Shape
 {
     public int Height { get; set; }
@@ -16,7 +18,7 @@ public class Rectangle : Shape
 
     public override Point LeftSideCoordinates => LeftUpperPoint;
 
-    public override Point RightSideCoordinates => new Point(LeftUpperPoint.CoordX + Width, 
+    public override Point RightSideCoordinates => new(LeftUpperPoint.CoordX + Width, 
         LeftUpperPoint.CoordY + Height);
     
     public Rectangle(string shapeName, Point leftUpperPoint,
@@ -34,31 +36,37 @@ public class Rectangle : Shape
 
     public override int[,] Render()
     {
-        var picture = new int[Height + 1, Width + 1];
-        for (var i = 0; i < picture.GetLength(0); i++)
-        { 
-            for(var j = 0; j < picture.GetLength(1); j++) 
-            {
-                    picture[i, j] = 1; 
-            }
-        }
-        
-        if (IsFilled)
-            return picture;
-        
-        for (var i = 1; i < picture.GetLength(0) - 1; i++)
-        { 
-            for (var j = 1; j < picture.GetLength(1) - 1; j++) 
-            { 
-                picture[i, j] = 0;
-            }
-        }
-
-        return picture;
+        return IsFilled ? FillRectangle() : DrawLinesRectangle();
     }
+
+    private int[,] FillRectangle()
+    {
+        var rectPicture = new int[Height + 1, Width + 1];
+        for (var i = 0; i < rectPicture.GetLength(0); i++)
+        { 
+            for(var j = 0; j < rectPicture.GetLength(1); j++) 
+            {
+                rectPicture[i, j] = 1; 
+            }
+        }
+        return rectPicture;
+    }
+
+    private int[,] DrawLinesRectangle()
+    {
+        var rectPicture = FillRectangle();
+        for (var i = 1; i < rectPicture.GetLength(0) - 1; i++)
+        { 
+            for (var j = 1; j < rectPicture.GetLength(1) - 1; j++) 
+            { 
+                rectPicture[i, j] = 0;
+            }
+        }
+        return rectPicture;
+    } 
 
     public override string ToString()
     {
-        return $"Rectangle::{ShapeName}";
+        return $"Rectangle::Name: {ShapeName} || Height: {Height} || Width: {Width} || Square: {SquareShape}";
     }
 }

@@ -12,13 +12,11 @@ public abstract class Shape
 
     /// <summary>
     /// Coordinates which exist in left side.
-    /// For check to collision.
     /// </summary>
     public abstract Point LeftSideCoordinates { get; }
     
     /// <summary>
     /// Coordinates which exist in right side.
-    /// For check to collision.
     /// </summary>
     public abstract Point RightSideCoordinates { get; }
 

@@ -1,11 +1,13 @@
-﻿using ConsoleDrawing.Enums;
+﻿using ConsoleDrawing.Attributes;
+using ConsoleDrawing.Enums;
 
 namespace ConsoleDrawing.Models;
 
+[PointValidation(0, 0)]
 public class Point
 {
-    public int CoordX { get; set; }
-    public int CoordY { get; set; }
+    public int CoordX { get; private set; }
+    public int CoordY { get; private set; }
     
     public Point(int coordX, int coordY)
     {
@@ -30,5 +32,10 @@ public class Point
                 CoordX++;
                 break;
         }
+    }
+
+    public override string ToString()
+    {
+        return $"X: {CoordX}|| Y: {CoordY}";
     }
 }
