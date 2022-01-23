@@ -124,39 +124,35 @@ public class ShapeConverter : JsonConverter<Shape>
     {
         writer.WriteStartObject();
 
-        if (value is Circle circle)
+        switch (value)
         {
-            writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Circle);
-            writer.WritePropertyName("TypeValue");
-            JsonSerializer.Serialize(writer, circle);
-        }
-        else if (value is Line line)
-        {
-            writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Line);
-            writer.WritePropertyName("TypeValue");
-            JsonSerializer.Serialize(writer, line);
-        }
-        else if (value is Rectangle rect)
-        {
-            writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Rectangle);
-            writer.WritePropertyName("TypeValue");
-            JsonSerializer.Serialize(writer, rect);
-        }
-        else if (value is Square square)
-        {
-            writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Square);
-            writer.WritePropertyName("TypeValue");
-            JsonSerializer.Serialize(writer, square);
-        }
-        else if (value is Triangle triangle)
-        {
-            writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Triangle);
-            writer.WritePropertyName("TypeValue");
-            JsonSerializer.Serialize(writer, triangle);
-        }
-        else
-        {
-            throw new NotSupportedException();
+            case Circle circle:
+                writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Circle);
+                writer.WritePropertyName("TypeValue");
+                JsonSerializer.Serialize(writer, circle);
+                break;
+            case Line line:
+                writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Line);
+                writer.WritePropertyName("TypeValue");
+                JsonSerializer.Serialize(writer, line);
+                break;
+            case Square square:
+                writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Square);
+                writer.WritePropertyName("TypeValue");
+                JsonSerializer.Serialize(writer, square);
+                break;
+            case Rectangle rect:
+                writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Rectangle);
+                writer.WritePropertyName("TypeValue");
+                JsonSerializer.Serialize(writer, rect);
+                break;
+            case Triangle triangle:
+                writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Triangle);
+                writer.WritePropertyName("TypeValue");
+                JsonSerializer.Serialize(writer, triangle);
+                break;
+            default:
+                throw new NotSupportedException();
         }
 
         writer.WriteEndObject();
