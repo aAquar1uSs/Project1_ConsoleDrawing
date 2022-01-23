@@ -8,7 +8,7 @@ public class Circle : Shape
 {
     public int Radius { get; set; }
 
-    private int Diameter => Radius * 2;
+    public int Diameter => Radius * 2;
     
     public Point Center { get; set; }
 
